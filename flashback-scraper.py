@@ -308,7 +308,7 @@ def main():
                 continue
                 
             print("\n📂 Scrape Thread")
-            thread_id = input("Enter thread ID (e.g., t3638211): ")
+            thread_id = input("Enter thread ID (e.g., t331337): ")
             scraper.scrape_thread(thread_id)
             print("\nPress Enter to continue...")
             input()
