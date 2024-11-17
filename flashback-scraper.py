@@ -111,14 +111,20 @@ class ForumScraper:
         self.session = requests.Session()
         print("✅ Logged out successfully!")
 
-    def parse_post_datetime(self, time_str, post_heading):
+    def parse_post_datetime(self, post_heading):
         """Extract date and time from post heading"""
+        time_str = ""
+        if post_heading:
+            post_time = post_heading.get_text(strip=True)
+            if ',' in post_time:
+                time_str = post_time.split(',')[1].strip()
+
         date = None
         time = time_str.split('#')[0].strip() if '#' in time_str else time_str.strip()
-        
+
         if post_heading:
             heading_text = post_heading.get_text(strip=True)
-            
+
             if "Igår" in heading_text:
                 yesterday = datetime.now() - timedelta(days=1)
                 date = yesterday.strftime('%Y-%m-%d')
@@ -128,7 +134,7 @@ class ForumScraper:
                 date_match = re.search(r'\d{4}-\d{2}-\d{2}', heading_text)
                 if date_match:
                     date = date_match.group(0)
-        
+
         return date, time
 
     def scrape_thread(self, thread_id):
@@ -206,7 +212,7 @@ class ForumScraper:
                             if ',' in post_time:
                                 time_str = post_time.split(',')[1].strip()
                         
-                        date, time_only = self.parse_post_datetime(time_str, post_heading)
+                        date, time_only = self.parse_post_datetime(post.find('div', class_='post-heading'))
                         
                         post_data = {
                             'thread_title': thread_title,
